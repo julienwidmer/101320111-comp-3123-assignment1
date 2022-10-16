@@ -4,14 +4,38 @@ Assignment:     1
 Student Name:   Julien Widmer
 Student ID:     101320111
 */
+// Modules
 const express = require('express');
+const mongoose = require("mongoose");
+
+
+// Database connection
+const DB_NAME = "comp3123_assigment1";
+const DB_USER = "admin";
+const DB_PASSWORD = "CHANGE_HERE_PASSWORD";
+const DB_CONNECTION_STRING = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.adpukiy.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+
+mongoose.connect(DB_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, (error) => {
+    console.log(`Database connection error: ${error}`)
+});
+
+
+// Server config
+const SERVER_PORT = 8081;
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded());
+
+
+// Routing config
 const userRoutes = require("./routes/userRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
-
 app.use("/api/user/", userRoutes);
 app.use("/api/emp/", employeeRoutes);
 
-app.listen(8081, () => {
-    console.log("Server is listening on port 8081: http://localhost:8081");
+app.listen(SERVER_PORT, () => {
+    console.log(`Server listening at: http://localhost:${SERVER_PORT}`);
 });
