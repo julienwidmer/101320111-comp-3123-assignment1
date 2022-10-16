@@ -6,6 +6,17 @@ Student ID:     101320111
 */
 const mongoose = require("mongoose");
 const validator = require("validator");
+const passwordValidator = require("password-validator");
+
+// Password validation schema
+const validatePassword = new passwordValidator();
+validatePassword
+    .has().lowercase(2)
+    .has().uppercase(2)
+    .has().symbols(2)
+    .has().digits(2)
+    .has().not().spaces()
+    .is().min(12)
 
 // Define schema
 const userSchema = new mongoose.Schema({
@@ -24,15 +35,24 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        maxLength: 50
+        maxLength: 50,
+        validate: {
+            validator: (password) => validatePassword.validate(password),
+            message: (props) => {
+                let message = `'${props.value}' is not meeting the requirements! `;
+                message += "At least 2 lowercase and 2 uppercase letters, ";
+                message += "2 symbols, 2 digits, no spaces and at least 12 characters.";
+                return message;
+            }
+        }
     }
 })
 
 /* User JSON example:
 {
     "username": "jacobie",
-    "email": "j.ieschin@gmail.com",
-    "password": "1324"
+    "email": "j.ieschin@example.com",
+    "password": "p4$5WOrd!*12"
 }
 */
 
