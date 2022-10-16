@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema({
     }
 })
 
+/* User JSON example:
+{
+    "username": "jacobie",
+    "email": "j.ieschin@gmail.com",
+    "password": "1324"
+}
+*/
+
 // Create mongodb schema
 const user = mongoose.model("user", userSchema);
 module.exports = user;
