@@ -5,6 +5,7 @@ Student Name:   Julien Widmer
 Student ID:     101320111
 */
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 // Define schema
 const userSchema = new mongoose.Schema({
@@ -15,7 +16,11 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         maxLength: 50,
-        unique: true
+        unique: true,
+        validate: {
+            validator: (email) => validator.isEmail(email),
+            message: (props) => `'${props.value}' is not a valid email address!`
+        }
     },
     password: {
         type: String,
