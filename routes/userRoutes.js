@@ -41,8 +41,8 @@ routes.post("/login",(req, res) => {
         "password": req.body.password
     };
 
-    UserModel.find(userCredentials, (err, user) => {
-        if (err) {
+    UserModel.find(userCredentials, (error, user) => {
+        if (error) {
             // Server side error
             res.status(500).send({message: `Error while authenticating user: ${error}`});
         }
