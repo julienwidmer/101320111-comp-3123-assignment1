@@ -58,7 +58,7 @@ const UserSchema = new mongoose.Schema({
 }
 */
 
-UserSchema.pre("save", (next) => {
+UserSchema.pre("save", function (next) {
     if (this.isModified("password") || this.isNew) {
         // Generate password salt
         bcrypt.genSalt(10, (error, salt) => {
