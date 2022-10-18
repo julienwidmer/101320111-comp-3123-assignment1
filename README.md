@@ -44,7 +44,7 @@ const DB_CONNECTION_STRING = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.a
 ## How to Log In
 A user needs to be created and added into the database.
 ### Add a new user (if needed)
-1. Copy the [User JSON object example](#examples-of-json-objects-for-the-models) or create yout own.
+1. Copy the [User JSON object example](#examples-of-json-objects) or create yout own.
    1. The email address needs to be valid and unique (no duplicated users).
    2. The password needs to be strong and contain at least:
       1. 2 lowercase letters;
@@ -64,7 +64,7 @@ A user needs to be created and added into the database.
 *(POST request to http://localhost:8081/api/user/login)*
 2. Add the username and password inside a JSON object and send the request.
 
-For example, if you created a user with our [JSON object example](#examples-of-json-objects-for-the-models), you would have the following in the body of your request:
+For example, if you created a user with our [JSON object example](#examples-of-json-objects), you would have the following in the body of your request:
 ```json
 {
   "username": "jacobie",
