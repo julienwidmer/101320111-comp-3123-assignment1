@@ -7,6 +7,7 @@ Student ID:     101320111
 const mongoose = require("mongoose");
 const validator = require("validator");
 const passwordValidator = require("password-validator");
+const bcrypt = require("bcrypt");
 
 // Password validation schema
 const validatePassword = new passwordValidator();
@@ -19,7 +20,7 @@ validatePassword
     .is().min(12)
 
 // Define schema
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         maxLength: 100,
@@ -57,6 +58,38 @@ const userSchema = new mongoose.Schema({
 }
 */
 
+UserSchema.pre("save", (next) => {
+    if (this.isModified("password") || this.isNew) {
+        // Generate password salt
+        bcrypt.genSalt(10, (error, salt) => {
+            if (error) {
+                return next(error);
+            } else {
+                // Hash password
+                bcrypt.hash(this.password, salt, (error, hash) => {
+                    if (error) { return error; }
+
+                    // Save hash
+                    user.password = hash
+                    return next();
+                });
+            }
+        });
+    } else {
+        return next();
+    }
+});
+
+UserSchema.methods.comparePassword = function (plainTextPassword, callback) {
+    bcrypt.compare(plainTextPassword, this.password, (error, isMatch) => {
+        if (error) {
+            return callback(error);
+        } else {
+            callback(null, isMatch);
+        }
+    })
+}
+
 // Create mongodb schema
-const user = mongoose.model("user", userSchema);
+const user = mongoose.model("user", UserSchema);
 module.exports = user;

@@ -36,33 +36,42 @@ routes.post("/login", (req, res) => {
     }
 
     // Authenticate user
-    const userCredentials = {
-        "username": req.body.username,
-        "password": req.body.password
-    };
-
-    UserModel.find(userCredentials, (error, user) => {
+    const login = req.body;
+    UserModel.findOne({"username": login.username}, (error, user) => {
         if (error) {
             // Server side error
             res.status(500).send({message: `Error while authenticating user: ${error}`});
         }
 
-        if (user != "") {
-            const successMessage = {
-                "status": true,
-                "username": login.username,
-                "message": "User logged in successfully"
-            };
 
-            res.status(200).send(successMessage);
-        } else {
-            // Client side error
-            const wrongCredentialsMessage = {
-                "status": false,
-                "message": "Invalid username and password."
-            };
+        const wrongCredentialsMessage = {
+            "status": false,
+            "message": "Invalid username and password."
+        };
 
+        if (user == null) {
+            // Client side error - wrong username
             res.status(400).send(wrongCredentialsMessage);
+        } else {
+            user.comparePassword(login.password, (error, isMatch) => {
+                if (error) {
+                    // Server side error
+                    res.status(500).send({message: `Error while authenticating user: ${error}`});
+                }
+
+                if (isMatch) {
+                    const successMessage = {
+                        "status": true,
+                        "username": login.username,
+                        "message": "User logged in successfully"
+                    };
+
+                    res.status(200).send(successMessage);
+                } else {
+                    // Client side error - wrong password
+                    res.status(400).send(wrongCredentialsMessage);
+                }
+            })
         }
     });
 })
