@@ -65,15 +65,51 @@ routes.get("/employees/:id", async (req, res) => {
 })
 
 // http://localhost:8081/api/emp/employees/ObjectId
-routes.put("/employees/:eid", (req, res) => {
+routes.put("/employees/:eid", async (req, res) => {
     const employeeId = req.params.eid;
-    res.send({message: "200 - User can update employee details"})
+
+    // Validate request
+    if(JSON.stringify(req.body) == "{}") {
+        // Client side error
+        return res.status(400).send({message: "Employee content can not be empty"});
+    }
+
+    // Update Employee with employeeId
+    try {
+        await EmployeeModel.findByIdAndUpdate(employeeId, req.body);
+        const updateEmployee = await EmployeeModel.findById(employeeId);
+
+        if (updateEmployee) {
+            res.status(200).send(updateEmployee);
+        } else {
+            // Client side error
+            res.status(400).send({message: `No employee to update found with employeeId: ${req.params.noteId}`});
+        }
+    } catch (error) {
+        res.status(500).send(
+            // Server side error
+            {message: `Error while updating employee with given employeeId "${employeeId}": ${error}`}
+        );
+    }
 })
 
 // http://localhost:8081/api/emp/employees?eid=ObjectId
-routes.delete("/employees", (req, res) => {
+routes.delete("/employees", async (req, res) => {
     const employeeId = req.query.eid;
-    res.send({message: "204 - User can delete employee by employee id"})
+
+    // Delete Employee with employeeId
+    try {
+        const employee = await EmployeeModel.findByIdAndRemove(employeeId);
+        if (employee) {
+            res.status(204);
+        } else {
+            // Client side error
+            res.status(400).send({message: `No employee to remove with employeeId: ${employeeId}`});
+        }
+    } catch (error) {
+        // Server side error
+        res.status(500).send({message: `Error while removing note with given employeeId: ${error}`});
+    }
 })
 
 module.exports = routes;
