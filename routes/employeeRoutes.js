@@ -101,7 +101,7 @@ routes.delete("/employees", async (req, res) => {
     try {
         const employee = await EmployeeModel.findByIdAndRemove(employeeId);
         if (employee) {
-            res.status(204);
+            res.status(204).end();
         } else {
             // Client side error
             res.status(400).send({message: `No employee to remove with employeeId: ${employeeId}`});
