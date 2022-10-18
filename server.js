@@ -19,7 +19,8 @@ mongoose.connect(DB_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (error) => {
-    console.log(`Database connection error: ${error}`)
+    if (error) throw error;
+    console.log("Successfully connected to MongoDB");
 });
 
 
