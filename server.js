@@ -27,7 +27,7 @@ mongoose.connect(DB_CONNECTION_STRING, {
 const SERVER_PORT = 8081;
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 
 // Routing config
