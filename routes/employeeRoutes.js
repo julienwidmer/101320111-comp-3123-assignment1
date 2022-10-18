@@ -6,15 +6,43 @@ Student ID:     101320111
 */
 const express = require("express");
 const routes = express.Router();
+const EmployeeModel = require("../models/employeeModel");
 
 // http://localhost:8081/api/emp/employees
-routes.get("/employees", (req, res) => {
-    res.send({message: "200 - User can get all employee list"})
+routes.get("/employees", async (req, res) => {
+    // Retrieve all employees
+    try {
+        const employees = await EmployeeModel.find();
+
+        if (employees != "") {
+            res.status(200).send(employees);
+        } else {
+            // Client side error
+            res.status(400).send({message: "No employees found."});
+        }
+    } catch (error) {
+        // Server side error
+        res.status(500).send({message: `Error while retrieving employees: ${error}`})
+    }
 })
 
 // http://localhost:8081/api/emp/employees
-routes.post("/employees", (req, res) => {
-    res.send({message: "201 - User can create new employee"})
+routes.post("/employees", async (req, res) => {
+    // Validate request
+    if(JSON.stringify(req.body) == "{}") {
+        // Client side error
+        return res.status(400).send({message: "Employee content can not be empty"});
+    }
+
+    // Create new Employee
+    const newEmployee = new EmployeeModel(req.body);
+    try {
+        await newEmployee.save();
+        res.status(201).send(newEmployee);
+    } catch (error) {
+        // Server side error
+        res.status(500).send({message: `Error while inserting new employee: ${error}`});
+    }
 })
 
 // http://localhost:8081/api/emp/employees/1
@@ -28,7 +56,7 @@ routes.put("/employees/:eid", (req, res) => {
     res.send({message: "200 - User can update employee details"})
 })
 
-// http://localhost:8081/api/emp/employees?eid=5
+// http://localhost:8081/api/emp/employees?eid=1
 routes.delete("/employees", (req, res) => {
     const employeeId = req.query.eid;
     res.send({message: "204 - User can delete employee by employee id"})
