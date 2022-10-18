@@ -22,7 +22,8 @@ validatePassword
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        maxLength: 100
+        maxLength: 100,
+        unique: true
     },
     email: {
         type: String,

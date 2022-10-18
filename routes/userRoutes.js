@@ -28,8 +28,43 @@ routes.post("/signup", async (req, res) => {
 })
 
 // http://localhost:8081/api/user/login
-routes.post("/login", (req, res) => {
-    res.send({message: "200 - Allow user to access the system"});
+routes.post("/login",(req, res) => {
+    // Validate request
+    if(JSON.stringify(req.body) == "{}") {
+        // Client side error
+        return res.status(400).send({message: "Login can not be empty"});
+    }
+
+    // Authenticate user
+    const userCredentials = {
+        "username": req.body.username,
+        "password": req.body.password
+    };
+
+    UserModel.find(userCredentials, (err, user) => {
+        if (err) {
+            // Server side error
+            res.status(500).send({message: `Error while authenticating user: ${error}`});
+        }
+
+        if (user != "") {
+            const successMessage = {
+                "status": true,
+                "username": userCredentials.username,
+                "password": userCredentials.password
+            };
+
+            res.status(200).send(successMessage);
+        } else {
+            // Client side error
+            const wrongCredentialsMessage = {
+                "status": false,
+                "message": "Invalid username and password."
+            };
+
+            res.status(400).send(wrongCredentialsMessage);
+        }
+    });
 })
 
 module.exports = routes;
