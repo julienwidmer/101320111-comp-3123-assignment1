@@ -70,7 +70,7 @@ UserSchema.pre("save", function (next) {
                     if (error) { return error; }
 
                     // Save hash
-                    user.password = hash
+                    this.password = hash
                     return next();
                 });
             }
