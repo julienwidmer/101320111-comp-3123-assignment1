@@ -28,7 +28,7 @@ routes.post("/signup", async (req, res) => {
 })
 
 // http://localhost:8081/api/user/login
-routes.post("/login",(req, res) => {
+routes.post("/login", (req, res) => {
     // Validate request
     if(JSON.stringify(req.body) == "{}") {
         // Client side error
@@ -50,8 +50,8 @@ routes.post("/login",(req, res) => {
         if (user != "") {
             const successMessage = {
                 "status": true,
-                "username": userCredentials.username,
-                "password": userCredentials.password
+                "username": login.username,
+                "message": "User logged in successfully"
             };
 
             res.status(200).send(successMessage);
