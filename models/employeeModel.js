@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 // Define schema
-const employeeSchema = new mongoose.Schema({
+const EmployeeSchema = new mongoose.Schema({
     first_name: {
         type: String,
         maxLength: 100,
@@ -50,5 +50,5 @@ const employeeSchema = new mongoose.Schema({
 */
 
 // Create mongodb schema
-const employee = mongoose.model("employee", employeeSchema);
+const employee = mongoose.model("employee", EmployeeSchema);
 module.exports = employee;
