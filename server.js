@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 
 
 // Database connection
-const DB_NAME = "comp3123_assigment1";
+const DB_NAME = "comp3123_assigment2";
 const DB_USER = "admin";
 const DB_PASSWORD = process.env.MONGO_DB_PASSWORD;
 const DB_CONNECTION_STRING = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.adpukiy.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
